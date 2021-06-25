@@ -1,6 +1,7 @@
 <template>
     <el-row type="flex" align="middle" style="min-height: 15vh">
         <el-col :span="20" style="font-size: xx-large" align="middle">
+            <i class="el-icon-odometer"></i>
                 查看和管理所有设备
         </el-col>
         <el-col :span="4">
@@ -108,6 +109,7 @@
         right: 50px;
     }
     .cardList{
-        margin: fill;
+        margin: auto;
+        width: 80%;
     }
 </style>

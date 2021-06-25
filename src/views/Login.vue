@@ -7,20 +7,24 @@ height: 50%; }">
                     MyIOT-登录
                 </el-row>
                 <el-divider></el-divider>
-                    <el-form :model="loginForm" :rules="rules" ref="ruleForm"
+                    <el-form :model="loginForm" :rules="rules" ref="loginForm"
                              label="top"
                              style="margin: 0 10% 10% 10%"
                     >
                         <el-form-item label="用户名" prop="username">
-                            <el-input v-model="loginForm.username"></el-input>
+                            <el-input v-model="loginForm.username" placeholder="用户名或邮箱"></el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
-                            <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
+                            <el-input type="password" v-model="loginForm.password" autocomplete="off" placeholder="你的密码"></el-input>
                         </el-form-item>
                         <el-form-item style="margin-top: 8vh">
                             <el-row>
                                 <el-col :span="12">
-                                    <el-button type="primary" @click="submitForm" class="loginPageButton">登录</el-button>
+                                    <el-button type="primary"
+                                               @click="submitForm('loginForm')"
+                                               class="loginPageButton"
+                                                :disabled="waitingForLoginRes"
+                                    >登录</el-button>
                                 </el-col>
                                 <el-col :span="12">
                                     <el-button @click="gotoRegisterPage" class="loginPageButton">注册</el-button>
@@ -39,10 +43,13 @@ height: 50%; }">
 </template>
 
 <script>
+    import utils from "../Common/utils";
+
     export default {
         name:"Login",
         data() {
             return {
+                waitingForLoginRes:false,
                 loginForm: {
                     username: '',
                     password: '',
@@ -50,10 +57,11 @@ height: 50%; }">
                 rules: {
                     username: [
                         { required: true, message: '请输入您的用户名', trigger: 'blur' },
-                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                        { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur' }
                     ],
                     password: [
-                        { required: true, message: '请输入您的密码', trigger: 'change' }
+                        { required: true, message: '请输入您的密码', trigger: 'change' },
+                        { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
                     ]
                 }
             };
@@ -62,7 +70,23 @@ height: 50%; }">
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        this.waitingForLoginRes = true;
+                        this.$axios.post(this.Server + "/api/login",
+                            this.loginForm,
+                            {
+                            }).then((res)=>{
+                            this.waitingForLoginRes = false;
+                            console.log(res.data);
+                            let token = res.data.data.body.token
+                            let user = res.data.data.body.username
+                            utils.saveUserToStorage(user,token)
+                            this.$router.push('/')
+
+                        }).catch(error => {
+                            alert('账号或密码错误');
+                            this.waitingForLoginRes = false;
+                            console.log(error);
+                        });
                     } else {
                         alert('您填写的用户名和密码不符合规范')
                         return false;

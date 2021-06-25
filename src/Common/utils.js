@@ -9,17 +9,20 @@ export default{
             return (token === null || token === '')
         }
     },
-    userInfo:{
+    currentUserInfo(){
+        return localStorage.getItem('curUser')
 
     },
-    saveUserToStorage:function () {
-
+    saveUserToStorage:function (user,token) {
+        localStorage.setItem('Authorization',token)
+        localStorage.setItem('curUser',user)
     },
     clearLoginInfo(){
         if(noBackend)
             isLoggedIn = !isLoggedIn;
         else{
-            localStorage.removeItem('auth');
+            localStorage.removeItem('curUser');
+            localStorage.removeItem('Authorization');
         }
 
     }

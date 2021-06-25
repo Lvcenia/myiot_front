@@ -2,6 +2,7 @@
   <div class="home">
     <el-row type="flex" align="middle" style="min-height: 15vh">
       <el-col :span="24" style="font-size: xx-large" align="middle">
+        <i class="el-icon-s-data"></i>
         首页
       </el-col>
     </el-row>
@@ -61,3 +62,10 @@ export default {
 
 }
 </script>
+
+<style>
+  .home{
+    margin: auto;
+    width: 80%;
+  }
+</style>

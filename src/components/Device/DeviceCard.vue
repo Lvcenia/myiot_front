@@ -8,11 +8,14 @@
             <el-col :span="12">
                 <el-col :span="12">
                     <el-button class="DeviceEditButton" @click="emitModeChange">
+                        <i class="el-icon-edit" v-if="!isEditing"></i>
                         {{editButtonText}}
                     </el-button>
                 </el-col>
                 <el-col v-if="isEditing" :span="12">
-                    <el-button type="primary" @click="updateDeviceName">确认</el-button>
+                    <el-button type="primary" @click="updateDeviceName">
+                        <i class="el-icon-edit"></i>
+                        确认</el-button>
                 </el-col>
             </el-col>
         </el-row>

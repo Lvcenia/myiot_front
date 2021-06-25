@@ -1,6 +1,7 @@
 <template>
     <el-row type="flex" align="middle" style="background-color: #444444;height: 6vh">
         <el-col :span="20" style="color: #EEEEEE;font-size: large;">
+            <i class="el-icon-location"></i>
             地图 - {{isShowingTrace ? "轨迹模式" : "普通模式"}}
         </el-col>
         <el-col :span="4" v-if="isShowingTrace">

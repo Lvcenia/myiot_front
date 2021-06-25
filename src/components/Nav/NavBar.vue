@@ -28,7 +28,7 @@
                 </template>
                 <div id="user">
                     <div id="userInfo" v-if="this.$utils.isLoggedIn()">
-                        <el-dropdown>
+                        <el-dropdown @command="onDropdownItemClicked">
                             <el-button type="primary"
                                        icon="el-icon-user-solid"
                             >
@@ -36,8 +36,12 @@
                             </el-button>
                             <template #dropdown>
                                 <el-dropdown-menu>
-                                    <el-dropdown-item command="">用户信息</el-dropdown-item>
-                                    <el-dropdown-item command="logOut">登出</el-dropdown-item>
+                                    <el-dropdown-item command="info">
+                                        <i class="el-icon-s-custom"></i>
+                                        用户信息</el-dropdown-item>
+                                    <el-dropdown-item command="logout">
+                                        <i class="el-icon-back"></i>
+                                        登出</el-dropdown-item>
                                 </el-dropdown-menu>
                             </template>
                         </el-dropdown>
@@ -81,11 +85,24 @@
             gotoRegisterPage(){
                 this.$parent.Goto('/register')
             },
+            onDropdownItemClicked(item){
+                switch (item) {
+                    case "info":
+                        this.gotoUserInfoPage();
+                        break;
+                    case "logout":
+                        this.logOut();
+                        break;
+                    default:break;
+                }
+            },
             gotoUserInfoPage(){
 
             },
             logOut(){
+                alert("??")
                 utils.clearLoginInfo();
+                this.$router.push('/login')
             }
         }
     }
