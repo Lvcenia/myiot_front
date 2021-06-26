@@ -24,7 +24,7 @@ axios.interceptors.request.use(
 
 const app = createApp(App)
 installElementPlus(app)
-app.config.globalProperties.Server = "http://localhost:12500"
+app.config.globalProperties.Server = "http://localhost:3001"
 app.config.globalProperties.$axios = axios
 app.config.globalProperties.$utils = utils
 app.config.globalProperties.$app = App

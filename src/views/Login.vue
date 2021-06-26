@@ -53,15 +53,16 @@ height: 50%; }">
                 loginForm: {
                     username: '',
                     password: '',
+                    token:true
                 },
                 rules: {
                     username: [
                         { required: true, message: '请输入您的用户名', trigger: 'blur' },
-                        { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur' }
+                        { min: 5, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' }
                     ],
                     password: [
                         { required: true, message: '请输入您的密码', trigger: 'change' },
-                        { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+                        { min: 8, max: 40, message: '长度在 8 到 40 个字符', trigger: 'blur' }
                     ]
                 }
             };
@@ -71,21 +72,28 @@ height: 50%; }">
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         this.waitingForLoginRes = true;
-                        this.$axios.post(this.Server + "/api/login",
+                        this.$axios.post(this.Server + "/api/user/login",
                             this.loginForm,
                             {
                             }).then((res)=>{
                             this.waitingForLoginRes = false;
                             console.log(res.data);
-                            let token = res.data.data.body.token
-                            let user = res.data.data.body.username
-                            utils.saveUserToStorage(user,token)
-                            this.$router.push('/')
+                            if(res.data["code"] === 0){
+                                let token = res.data.data.token
+                                let user = res.data.data["user_name"]
+                                utils.saveUserToStorage(user,token)
+                                alert("登陆成功！")
+                                this.$router.go(0)
+
+                            }else{
+                                alert("用户名或密码错误，请重试")
+                            }
+
 
                         }).catch(error => {
-                            alert('账号或密码错误');
+                            alert('出现错误，请重试\n' + error);
                             this.waitingForLoginRes = false;
-                            console.log(error);
+
                         });
                     } else {
                         alert('您填写的用户名和密码不符合规范')

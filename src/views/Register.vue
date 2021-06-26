@@ -11,14 +11,14 @@ height: 50%; }">
                          label="top"
                 >
                     <el-form-item label="用户名" prop="username">
-                        <el-input v-model="registerForm.username" placeholder="你的用户名 3~12字符"></el-input>
+                        <el-input v-model="registerForm.username" placeholder="你的用户名 5~30字符"></el-input>
                     </el-form-item>
                     <el-form-item label="密码" prop="password">
-                        <el-input type="password" placeholder="你的密码 6~16字符"
+                        <el-input type="password" placeholder="你的密码 8~40字符"
                                   v-model="registerForm.password" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="确认密码" prop="passAgain">
-                        <el-input type="password" v-model="registerForm.passAgain" placeholder="与密码完全一致" autocomplete="off"></el-input>
+                    <el-form-item label="确认密码" prop="password_confirm">
+                        <el-input type="password" v-model="registerForm.password_confirm" placeholder="与密码完全一致" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="电子邮件" prop="email">
                         <el-input type="email" placeholder="合法的邮箱地址，唯一账号标识" v-model="registerForm.email" autocomplete="off"></el-input>
@@ -74,19 +74,19 @@ height: 50%; }">
                 registerForm: {
                     username: '',
                     password: '',
-                    passAgain:'',
+                    password_confirm:'',
                     email:'',
                 },
                 rules: {
                     username: [
                         { required: true, message: '请输入您的用户名', trigger: 'blur' },
-                        { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur' }
+                        { min: 5, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' }
                     ],
                     password: [
                         { required: true, message: '请输入您的密码', trigger: 'change' },
-                        { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+                        { min: 8, max: 40, message: '长度在 8 到 40 个字符', trigger: 'blur' }
                     ],
-                    passAgain: [
+                    password_confirm: [
                         { validator:validatePass2,required: true, message: '确认密码与密码不一致！', trigger: 'change' }
                     ],
                     email: [
@@ -99,21 +99,25 @@ height: 50%; }">
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
                         this.waitingForRegRes = true;
-                        this.$axios.post(this.Server + "/api/register",
+                        this.$axios.post(this.Server + "/api/user/register",
                             this.registerForm,
                             {
                         }).then((res)=>{
                             this.waitingForRegRes = false;
-                            console.log(res.data);
-                            alert("注册成功！请进行登录")
-                            this.$router.push('/login')
+                            if(res.data["code"]!==0){
+                                alert("注册失败，请稍后重试\n" + JSON.stringify(res.data))
+                            }
+                            else{
+                                alert("注册成功！请进行登录")
+                                this.$router.push('/login')
+                            }
+
 
                         }).catch(error => {
                             this.waitingForRegRes = false;
-                            alert('账号或密码错误');
-                            console.log(error);
+                            alert('注册失败 请重试' + error);
+
                         });
                     } else {
                         alert('表单不符合规范')

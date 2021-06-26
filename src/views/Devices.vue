@@ -77,6 +77,20 @@
         },
         methods: {
             requestDeviceList(){
+                this.$axios.get(this.Server + "/api/device/list",{
+                    }
+                    ).then((res)=>{
+                    console.log(res.data);
+                    if(res.data["code"] === 0){
+                        this.allDevices = res.data.data;
+                    }else{
+                        alert("获取设备列表失败")
+                    }
+                }).catch(error => {
+                    alert('出现错误，请重试\n' + error);
+                    this.waitingForLoginRes = false;
+
+                });
 
             },
             reformattedDeviceList(){

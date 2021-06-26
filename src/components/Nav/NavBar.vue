@@ -74,6 +74,10 @@
                 }
             };
         },
+        mounted() {
+            this.$utils.onLoggedIn.push(this.$forceUpdate)
+            this.$utils.onLoggedOut.push(this.$forceUpdate)
+        },
         methods: {
             handleSelect(key, keyPath) {
                 this.$parent.Goto(this.pageRouteDict[key])
@@ -102,7 +106,7 @@
             logOut(){
                 alert("??")
                 utils.clearLoginInfo();
-                this.$router.push('/login')
+                this.$router.go(0)
             }
         }
     }
